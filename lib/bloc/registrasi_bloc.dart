@@ -3,7 +3,7 @@ import 'package:toko_kita/helpers/api.dart';
 import 'package:toko_kita/helpers/api_url.dart';
 import 'package:toko_kita/model/registrasi.dart';
 
-class RegistasiBloc {
+class RegistrasiBloc {
   static Future<Registrasi> registrasi(
       {String? name, String? email, String? password}) async {
     String apiUrl = ApiUrl.registrasi;
