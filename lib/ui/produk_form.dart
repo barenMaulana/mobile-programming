@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:toko_kita/model/produk.dart';
 
 class ProdukForm extends StatefulWidget {
-  produk? produk;
+  final Produk? produk;
 
-  ProdukForm({key? key, this.produk}) : super(key: key);
+  ProdukForm({Key? key, this.produk}) : super(key: key);
 
   @override
-  _produkFormState createState() => _produkFormState();
+  _ProdukFormState createState() => _ProdukFormState();
 }
 
-class _produkFormState extends State<ProdukForm> {
+class _ProdukFormState extends State<ProdukForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   String judul = "Tambah Produk";
@@ -26,18 +26,19 @@ class _produkFormState extends State<ProdukForm> {
     isUpdate();
   }
 
-  isUpdate() {
+  void isUpdate() {
     if (widget.produk != null) {
       setState(() {
         judul = "Ubah Produk";
         tombolSubmit = "Ubah";
-        _kodeProdukTextboxController.text = widget.produk!.kodeProduk!;
-        _namaProdukTextboxController.text = widget.produk!.namaProduk!;
-        _hargaProdukTextboxController.text = widget.produk!.hargaProduk!.toString();
+        _kodeProdukTextboxController.text = widget.produk!.kodeProduk ?? '';
+        _namaProdukTextboxController.text = widget.produk!.namaProduk ?? '';
+        _hargaProdukTextboxController.text =
+            widget.produk!.hargaProduk?.toString() ?? '';
       });
-  } else {
-    judul = "Tambah Produk";
-    tombolSubmit = "Simpan";
+    } else {
+      judul = "Tambah Produk";
+      tombolSubmit = "Simpan";
     }
   }
 
@@ -45,34 +46,36 @@ class _produkFormState extends State<ProdukForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(judul)),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  _kodeProdukTextField(),
-                  _namaProdukTextField(),
-                  _hargaProdukTextField(),
-                  _buttonSubmit()
-                ],
-              ),
+        title: Text(judul),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _kodeProdukTextField(),
+                _namaProdukTextField(),
+                _hargaProdukTextField(),
+                const SizedBox(height: 20),
+                _buttonSubmit(),
+              ],
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 
-  //Membuat TextField Kode Produk
+  // Membuat TextField Kode Produk
   Widget _kodeProdukTextField() {
     return TextFormField(
       decoration: const InputDecoration(labelText: "Kode Produk"),
       keyboardType: TextInputType.text,
       controller: _kodeProdukTextboxController,
       validator: (value) {
-        //validasi harus diisi
+        // validasi harus diisi
         if (value!.isEmpty) {
           return 'Kode Produk harus diisi';
         }
@@ -81,14 +84,14 @@ class _produkFormState extends State<ProdukForm> {
     );
   }
 
-  //Membuat Textbox Nama Produk
+  // Membuat Textbox Nama Produk
   Widget _namaProdukTextField() {
     return TextFormField(
       decoration: const InputDecoration(labelText: "Nama Produk"),
       keyboardType: TextInputType.text,
       controller: _namaProdukTextboxController,
       validator: (value) {
-        //validasi harus diisi
+        // validasi harus diisi
         if (value!.isEmpty) {
           return 'Nama Produk harus diisi';
         }
@@ -97,14 +100,14 @@ class _produkFormState extends State<ProdukForm> {
     );
   }
 
-  //Membuat Textbox Harga Produk
+  // Membuat Textbox Harga Produk
   Widget _hargaProdukTextField() {
     return TextFormField(
       decoration: const InputDecoration(labelText: "Harga Produk"),
       keyboardType: TextInputType.number,
       controller: _hargaProdukTextboxController,
       validator: (value) {
-        //validasi harus diisi
+        // validasi harus diisi
         if (value!.isEmpty) {
           return 'Harga Produk harus diisi';
         }
@@ -113,12 +116,15 @@ class _produkFormState extends State<ProdukForm> {
     );
   }
 
-  //Membuat Tombol Simpan/ubah
+  // Membuat Tombol Simpan/Ubah
   Widget _buttonSubmit() {
-    return OutlinedButton() (
+    return OutlinedButton(
       child: Text(tombolSubmit),
-      onPressed: () {,
-      var validate = _formKey.currentState!.validate();
-    });
-    }
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          // Implement your save/update logic here
+        }
+      },
+    );
+  }
 }

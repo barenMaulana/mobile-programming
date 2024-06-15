@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'
+import 'package:flutter/material.dart';
 import 'package:toko_kita/ui/registrasi_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordTextboxController = TextEditingController();
 
   @override
-  widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Login"),
@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 _emailTextField(),
                 _passwordTextField(),
-                _buttonlogin(),
+                _buttonLogin(),
                 const SizedBox(
                   height: 30,
                 ),
@@ -77,11 +77,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   //Membuat Tombol Login
-  Widget _buttonlogin() {
+  Widget _buttonLogin() {
     return ElevatedButton(
         child: const Text("Login"),
         onPressed: () {
-          var validate = _formKey.currentState!.validate();
+          if (_formKey.currentState!.validate()) {
+            // Implement your login logic here
+          }
         });
   }
 
@@ -91,14 +93,13 @@ class _LoginPageState extends State<LoginPage> {
       child: InkWell(
         child: const Text(
           "Registrasi",
-        style: TextStyle(color: Colors.blue),
-      ),
-      onTap: () {
-        Navigator.push(context, 
-        MaterialPageRoute(builder: (context) => 
-        const RegistrasiPage()));
-      },
+          style: TextStyle(color: Colors.blue),
         ),
-      );
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const RegistrasiPage()));
+        },
+      ),
+    );
   }
 }
