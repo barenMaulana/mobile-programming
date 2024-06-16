@@ -123,6 +123,7 @@ class _ProdukFormState extends State<ProdukForm> {
           if (!_isLoading) {
             if (widget.produk != null) {
               // kondisi update produk
+              ubah();
             } else {
               // kondisi tambah produk
               simpan();
@@ -152,6 +153,34 @@ class _ProdukFormState extends State<ProdukForm> {
         ),
       );
     });
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void ubah() {
+    setState(() {
+      _isLoading = true;
+    });
+    Produk updateProduk = Produk(id: null);
+    updateProduk.id = widget.produk!.id;
+    updateProduk.kodeProduk = _kodeProdukTextboxController.text;
+    updateProduk.namaProduk = _namaProdukTextboxController.text;
+    updateProduk.hargaProduk = int.parse(_hargaProdukTextboxController.text);
+
+    ProdukBloc.updateProduk(produk: updateProduk).then((value) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => const ProdukPage(),
+      ));
+    }, onError: (error) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => const WarningDialog(
+          description: "Permintaan ubah data gagal, silahkan coba lagi",
+        ),
+      );
+    });
+
     setState(() {
       _isLoading = false;
     });

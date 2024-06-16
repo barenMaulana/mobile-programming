@@ -72,24 +72,30 @@ class _ProdukDetailState extends State<ProdukDetail> {
 
   void confirmHapus() {
     AlertDialog alertDialog = AlertDialog(
-      title: const Text("Konfirmasi"),
-      content: const Text("Apakah anda yakin ingin menghapus produk ini?"),
+      content: const Text("Yakin ingin menghapus data ini?"),
       actions: [
-        // Tombol hapus
+        // tombol hapus
         OutlinedButton(
           child: const Text("Ya"),
           onPressed: () {
-            // Implement your delete logic here
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProdukForm(
+                  produk: widget.produk!,
+                ),
+              ),
+            );
           },
         ),
-        // Tombol batal
+        // tombol batal
         OutlinedButton(
           child: const Text("Batal"),
           onPressed: () => Navigator.pop(context),
-        )
+        ),
       ],
     );
-    showDialog(context: context, builder: (context) => alertDialog);
+
+    showDialog(builder: (context) => alertDialog, context: context);
   }
 }
