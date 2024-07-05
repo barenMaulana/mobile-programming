@@ -174,13 +174,11 @@ class _ProdukFormState extends State<ProdukForm> {
       ));
     }, onError: (error) {
       showDialog(
-        context: context,
-        builder: (BuildContext context) => const WarningDialog(
-          description: "Permintaan ubah data gagal, silahkan coba lagi",
-        ),
-      );
+          context: context,
+          builder: (BuildContext context) => const WarningDialog(
+                description: "Permintaan ubah data gagal, silahkan coba lagi",
+              ));
     });
-
     setState(() {
       _isLoading = false;
     });

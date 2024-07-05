@@ -21,17 +21,14 @@ class _ProdukPageState extends State<ProdukPage> {
         title: const Text('List Produk'),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: GestureDetector(
-              child: const Icon(Icons.add, size: 26.0),
-              onTap: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProdukForm()),
-                );
-              },
-            ),
-          ),
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                child: const Icon(Icons.add, size: 26.0),
+                onTap: () async {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ProdukForm()));
+                },
+              )),
         ],
       ),
       drawer: Drawer(
@@ -42,27 +39,34 @@ class _ProdukPageState extends State<ProdukPage> {
               trailing: const Icon(Icons.logout),
               onTap: () async {
                 await LogoutBloc.logout().then((value) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ),
-                  );
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
                 });
               },
             ),
           ],
         ),
       ),
-      body: FutureBuilder<List>(
+      body: FutureBuilder<List<Produk>>(
         future: ProdukBloc.getProduks(),
         builder: (context, snapshot) {
-          if (snapshot.hasError) print(snapshot.error);
-          return snapshot.hasData
-              ? ListProduk(list: snapshot.data)
-              : const Center(
-                  child: CircularProgressIndicator(),
-                );
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text("Error: ${snapshot.error}"),
+            );
+          } else if (snapshot.hasData) {
+            return ListProduk(
+              list: snapshot.data,
+            );
+          } else {
+            return const Center(
+              child: Text("No data found"),
+            );
+          }
         },
       ),
     );
@@ -70,7 +74,7 @@ class _ProdukPageState extends State<ProdukPage> {
 }
 
 class ListProduk extends StatelessWidget {
-  final List? list;
+  final List<Produk>? list;
 
   const ListProduk({Key? key, this.list}) : super(key: key);
 

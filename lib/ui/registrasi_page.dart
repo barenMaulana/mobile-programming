@@ -112,14 +112,13 @@ class _RegistrasiPageState extends State<RegistrasiPage> {
 
   Widget _buttonRegistrasi() {
     return ElevatedButton(
-      child: const Text("Registrasi"),
-      onPressed: () {
-        var validate = _formKey.currentState!.validate();
-        if (validate) {
-          if (!_isLoading) _submit();
-        }
-      },
-    );
+        child: const Text("Registrasi"),
+        onPressed: () {
+          var validate = _formKey.currentState!.validate();
+          if (validate) {
+            if (!_isLoading) _submit();
+          }
+        });
   }
 
   void _submit() {
@@ -129,30 +128,27 @@ class _RegistrasiPageState extends State<RegistrasiPage> {
     });
 
     RegistrasiBloc.registrasi(
-      name: _namaTextboxController.text,
+      nama: _namaTextboxController.text,
       email: _emailTextboxController.text,
       password: _passwordTextboxController.text,
     ).then((value) {
       showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => SuccessDialog(
-          description: "Registrasi berhasil, silahkan login",
-          onClick: () {
-            Navigator.pop(context);
-          },
-        ),
-      );
-    }).catchError((error) {
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => SuccessDialog(
+                description: "Registrasi berhasil, silahkan login",
+                onClick: () {
+                  Navigator.pop(context);
+                },
+              ));
+    }, onError: (error) {
       showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => const WarningDialog(
-          description: "Registrasi gagal, silahkan coba lagi",
-        ),
-      );
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => const WarningDialog(
+                description: "Registrasi gagal, silahkan coba lagi",
+              ));
     });
-
     setState(() {
       _isLoading = false;
     });

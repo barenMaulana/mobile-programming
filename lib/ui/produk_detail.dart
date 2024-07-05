@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:toko_kita/model/produk.dart';
 import 'package:toko_kita/ui/produk_form.dart';
+import 'package:toko_kita/ui/produk_page.dart';
+import 'package:toko_kita/bloc/produk_bloc.dart';
+import 'package:toko_kita/widget/warning_dialog.dart';
 
 class ProdukDetail extends StatefulWidget {
   final Produk? produk;
@@ -70,6 +73,34 @@ class _ProdukDetailState extends State<ProdukDetail> {
     );
   }
 
+  // void confirmHapus() {
+  //   AlertDialog alertDialog = AlertDialog(
+  //     content: const Text("Yakin ingin menghapus data ini?"),
+  //     actions: [
+  //       // tombol hapus
+  //       OutlinedButton(
+  //         child: const Text("Ya"),
+  //         onPressed: () {
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(
+  //               builder: (context) => ProdukForm(
+  //                 produk: widget.produk!,
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //       ),
+  //       // tombol batal
+  //       OutlinedButton(
+  //         child: const Text("Batal"),
+  //         onPressed: () => Navigator.pop(context),
+  //       ),
+  //     ],
+  //   );
+
+  //   showDialog(builder: (context) => alertDialog, context: context);
+  // }
   void confirmHapus() {
     AlertDialog alertDialog = AlertDialog(
       content: const Text("Yakin ingin menghapus data ini?"),
@@ -78,14 +109,19 @@ class _ProdukDetailState extends State<ProdukDetail> {
         OutlinedButton(
           child: const Text("Ya"),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProdukForm(
-                  produk: widget.produk!,
-                ),
-              ),
-            );
+            Produk deleteProduk = Produk(id: null);
+            deleteProduk.id = widget.produk!.id;
+            ProdukBloc.deleteProduk(produk: deleteProduk).then((value) {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const ProdukPage()));
+            }, onError: (error) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => const WarningDialog(
+                        description:
+                            "Permintaan hapus data gagal, silahkan coba lagi",
+                      ));
+            });
           },
         ),
         // tombol batal
@@ -95,7 +131,6 @@ class _ProdukDetailState extends State<ProdukDetail> {
         ),
       ],
     );
-
     showDialog(builder: (context) => alertDialog, context: context);
   }
 }

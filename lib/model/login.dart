@@ -1,18 +1,16 @@
 class Login {
-  int? code;
-  bool? status;
-  String? token;
-  int? userID;
-  String? userEmail;
+  final String token;
+  final int userID;
+  final String email;
 
-  Login({this.code, this.status, this.token, this.userID, this.userEmail});
+  Login({required this.token, required this.userID, required this.email});
 
-  factory Login.fromJson(Map<String, dynamic> obj) {
+  factory Login.fromJson(Map<String, dynamic> json) {
     return Login(
-        code: obj['code'],
-        status: obj['status'],
-        token: obj[' data']['token'],
-        userID: obj['data']['user']['id'],
-        userEmail: obj['data']['user']['email']);
+      token: json['data']['token'],
+      userID: int.parse(
+          json['data']['user']['id'].toString()), // Konversi ke integer
+      email: json['data']['user']['email'],
+    );
   }
 }

@@ -7,12 +7,9 @@ class ProdukBloc {
   static Future<List<Produk>> getProduks() async {
     String apiUrl = ApiUrl.listProduk;
     var response = await Api().get(apiUrl);
-    var jsonObj = json.decode(response.body);
-    List<dynamic> listProduk = (jsonObj as Map<String, dynamic>)['data'];
-    List<Produk> produks = [];
-    for (int i = 0; i < listProduk.length; i++) {
-      produks.add(Produk.fromJson(listProduk[i]));
-    }
+    List<dynamic> listProduk = response['data'];
+    List<Produk> produks =
+        listProduk.map((data) => Produk.fromJson(data)).toList();
     return produks;
   }
 
@@ -24,8 +21,7 @@ class ProdukBloc {
       "harga": produk.hargaProduk.toString()
     };
     var response = await Api().post(apiUrl, body);
-    var jsonObj = json.decode(response.body);
-    return jsonObj['status'];
+    return response['status'];
   }
 
   static Future<bool> updateProduk({required Produk produk}) async {
@@ -36,14 +32,21 @@ class ProdukBloc {
       "nama_produk": produk.namaProduk,
       "harga": produk.hargaProduk.toString()
     };
-    print("Body: $body");
-    var repsonse = await Api().post(apiUrl, body);
-    var jsonObj = json.decode(repsonse.body);
-    return jsonObj['data'];
+    // var response = await Api().post(apiUrl, body);
+    // return response['status'];
+    print("Body : $body");
+    var response = await Api().put(apiUrl, body);
+    var jsonObj = json.decode(response.body);
+    return jsonObj['status'];
   }
 
-  static Future<bool> deleteProduk({int? id}) async {
-    String apiUrl = ApiUrl.deleteProduk(id!);
+  // static Future<bool> deleteProduk({int? id}) async {
+  //   String apiUrl = ApiUrl.deleteProduk(id!);
+  //   var response = await Api().delete(apiUrl);
+  //   return response['data'];
+  // }
+  static Future<bool> deleteProduk({required Produk produk}) async {
+    String apiUrl = ApiUrl.deleteProduk(produk.id!);
     var response = await Api().delete(apiUrl);
     var jsonObj = json.decode(response.body);
     return (jsonObj as Map<String, dynamic>)['data'];

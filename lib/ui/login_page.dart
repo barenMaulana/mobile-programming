@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:toko_kita/ui/registrasi_page.dart';
 import 'package:toko_kita/bloc/login_bloc.dart';
-import 'package:toko_kita/widget/warning_dialog.dart';
-import 'package:toko_kita/ui/produk_page.dart';
 import 'package:toko_kita/helpers/user_info.dart';
+import 'package:toko_kita/ui/produk_page.dart';
+import 'package:toko_kita/ui/registrasi_page.dart';
+import 'package:toko_kita/widget/warning_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -47,15 +47,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  //Membuat Textbox email
+  // Membuat Textbox email
   Widget _emailTextField() {
     return TextFormField(
       decoration: const InputDecoration(labelText: "Email"),
       keyboardType: TextInputType.emailAddress,
       controller: _emailTextboxController,
       validator: (value) {
-        //validasi harus diisi
-        if (value!.isEmpty) {
+        // Validasi harus diisi
+        if (value == null || value.isEmpty) {
           return 'Email harus diisi';
         }
         return null;
@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  //Membuat Textbox password
+  // Membuat Textbox password
   Widget _passwordTextField() {
     return TextFormField(
       decoration: const InputDecoration(labelText: "Password"),
@@ -71,8 +71,8 @@ class _LoginPageState extends State<LoginPage> {
       obscureText: true,
       controller: _passwordTextboxController,
       validator: (value) {
-        //validasi harus diisi
-        if (value!.isEmpty) {
+        // Validasi harus diisi
+        if (value == null || value.isEmpty) {
           return 'Password harus diisi';
         }
         return null;
@@ -80,17 +80,16 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  //Membuat Tombol Login
+  // Membuat Tombol Login
   Widget _buttonLogin() {
     return ElevatedButton(
-      child: const Text("Login"),
-      onPressed: () {
-        var validate = _formKey.currentState!.validate();
-        if (validate) {
-          if (!_isLoading) _submit();
-        }
-      },
-    );
+        child: const Text("Login"),
+        onPressed: () {
+          var validate = _formKey.currentState!.validate();
+          if (validate) {
+            if (!_isLoading) _submit();
+          }
+        });
   }
 
   void _submit() {
@@ -100,24 +99,23 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     LoginBloc.login(
-      email: _emailTextboxController.text,
-      password: _passwordTextboxController.text,
-    ).then((value) async {
-      await UserInfo().setToken(value.token.toString());
-      await UserInfo().setUserID(int.parse(value.userID.toString()));
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const ProdukPage()),
-      );
+            email: _emailTextboxController.text,
+            password: _passwordTextboxController.text)
+        .then((value) async {
+      print("Login response: $value"); // Tambahkan log ini
+      if (value != null && value.token != null) {
+        await UserInfo().setToken(value.token.toString());
+        print("Token set: ${value.token}"); // Tambahkan log ini
+        await UserInfo().setUserID(int.parse(value.userID.toString()));
+        print("UserID set: ${value.userID}"); // Tambahkan log ini
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const ProdukPage()));
+      } else {
+        _showWarningDialog();
+      }
     }).catchError((error) {
       print(error);
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => const WarningDialog(
-          description: "Login gagal, silahkan coba lagi",
-        ),
-      );
+      _showWarningDialog();
     });
 
     setState(() {
@@ -125,7 +123,16 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  //Membuat Menu untuk membuka halaman registrasi
+  void _showWarningDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => const WarningDialog(
+              description: "Login gagal, silahkan coba lagi",
+            ));
+  }
+
+  // Membuat Menu untuk membuka halaman registrasi
   Widget _menuRegistrasi() {
     return Center(
       child: InkWell(
