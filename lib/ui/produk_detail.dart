@@ -25,6 +25,13 @@ class _ProdukDetailState extends State<ProdukDetail> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            widget.produk?.image != null
+                ? Image.network(
+                    'http://localhost:8080/uploads/' + widget.produk!.image!,
+                    height: 200,
+                    width: 200,
+                  )
+                : Container(),
             Text(
               "Kode : ${widget.produk?.kodeProduk ?? 'N/A'}",
               style: const TextStyle(fontSize: 20.0),

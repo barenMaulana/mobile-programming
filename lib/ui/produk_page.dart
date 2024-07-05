@@ -111,6 +111,13 @@ class ItemProduk extends StatelessWidget {
       },
       child: Card(
         child: ListTile(
+          leading: produk.image != null
+              ? Image.network(
+                  'http://localhost:8080/uploads/' + produk.image!,
+                  width: 50,
+                  height: 50,
+                )
+              : null,
           title: Text(produk.namaProduk!),
           subtitle: Text(produk.hargaProduk.toString()),
         ),
